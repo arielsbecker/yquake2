@@ -827,6 +827,7 @@ typedef struct
 	int helpchanged;
 
 	qboolean spectator; /* client is a spectator */
+	qboolean homing_state; /* homing missiles */
 } client_persistant_t;
 
 /* client data that stays across deathmatch respawns */

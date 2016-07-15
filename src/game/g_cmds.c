@@ -1060,6 +1060,34 @@ Cmd_Wave_f(edict_t *ent)
 	}
 }
 
+/*
+=================
+Cmd_Homing_f
+CCH: whole new function for adjusting homing missile state
+=================
+*/
+void Cmd_Homing_f (edict_t *ent)
+{
+	int		i;
+
+	i = atoi (gi.argv(1));
+
+	switch (i)
+	{
+	case 0:
+		gi.cprintf (ent, PRINT_HIGH, "Homing missiles off\n");
+		ent->client->pers.homing_state = 0;
+		break;
+	case 1:
+	default:
+		gi.cprintf (ent, PRINT_HIGH, "Homing missiles on\n");
+		ent->client->pers.homing_state = 1;
+		break;
+	}
+}
+
+
+
 void
 Cmd_Say_f(edict_t *ent, qboolean team, qboolean arg0)
 {
@@ -1359,6 +1387,10 @@ ClientCommand(edict_t *ent)
 	else if (Q_stricmp(cmd, "putaway") == 0)
 	{
 		Cmd_PutAway_f(ent);
+	}
+	else if (Q_stricmp(cmd, "homing") == 0)
+	{
+		Cmd_Homing_f(ent); //Homing missiles
 	}
 	else if (Q_stricmp(cmd, "wave") == 0)
 	{
