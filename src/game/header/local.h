@@ -83,6 +83,11 @@
 #define MELEE_DISTANCE 80
 #define BODY_QUEUE_SIZE 8
 
+/* Teleportation defines */
+
+#define TELEPORT_AMMO				10
+#define TELEPORT_HEALTH				30
+
 typedef enum
 {
 	DAMAGE_NO,
@@ -922,7 +927,12 @@ struct gclient_s
 	int flood_whenhead; /* head pointer for when said */
 
 	float respawn_time; /* can respawn when time > this */
-
+	
+	/* Teleportation variables */
+	qboolean	teleport_stored;
+	vec3_t		teleport_angles;
+	vec3_t		teleport_origin;
+	/* Teleportation variables */
 	edict_t *chase_target; /* player we are chasing */
 	qboolean update_chase; /* need to update chase info? */
 };
