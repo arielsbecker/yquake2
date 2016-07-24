@@ -1333,6 +1333,27 @@ Cmd_PlayerList_f(edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH, "%s", text);
 }
 
+/*
+=================
+Cmd_DetPipes_f
+CCH: new function to detonate all detpipes within 5000 units
+=================
+*/
+void
+Cmd_DetPipes_f (edict_t *ent)
+{
+	edict_t	*blip = NULL;
+
+	while ((blip = findradius(blip, ent->s.origin, 5000)) != NULL)
+	{
+		if (!strcmp(blip->classname, "detpipe") && blip->owner == ent)
+		{
+			blip->think = Grenade_Explode;
+			blip->nextthink = level.time + .1;
+		}
+	}
+}
+
 void
 ClientCommand(edict_t *ent)
 {
@@ -1472,6 +1493,11 @@ ClientCommand(edict_t *ent)
 	else if (Q_stricmp(cmd, "wave") == 0)
 	{
 		Cmd_Wave_f(ent);
+	}
+	// CCH: new detpipes command
+	else if (Q_stricmp (cmd, "detpipes") == 0)
+	{
+		Cmd_DetPipes_f (ent);
 	}
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 	{

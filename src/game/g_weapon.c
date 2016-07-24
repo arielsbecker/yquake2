@@ -674,11 +674,11 @@ fire_grenade(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed,
 	grenade->s.modelindex = gi.modelindex("models/objects/grenade/tris.md2");
 	grenade->owner = self;
 	grenade->touch = Grenade_Touch;
-	grenade->nextthink = level.time + timer;
+	grenade->nextthink = level.time + 60;
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
-	grenade->classname = "grenade";
+	grenade->classname = "detpipe";
 
 	gi.linkentity(grenade);
 }
@@ -714,11 +714,11 @@ fire_grenade2(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 	grenade->s.modelindex = gi.modelindex("models/objects/grenade2/tris.md2");
 	grenade->owner = self;
 	grenade->touch = Grenade_Touch;
-	grenade->nextthink = level.time + timer;
+	grenade->nextthink = level.time + 60;
 	grenade->think = Grenade_Explode;
 	grenade->dmg = damage;
 	grenade->dmg_radius = damage_radius;
-	grenade->classname = "hgrenade";
+	grenade->classname = "detpipe";
 
 	if (held)
 	{
