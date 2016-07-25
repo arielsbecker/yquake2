@@ -1060,6 +1060,111 @@ Cmd_Wave_f(edict_t *ent)
 	}
 }
 
+/*
+=================
+Cmd_Homing_f
+CCH: whole new function for adjusting homing missile state
+=================
+*/
+void Cmd_Homing_f (edict_t *ent)
+{
+	int		i;
+
+	i = atoi (gi.argv(1));
+
+	switch (i)
+	{
+	case 0:
+		gi.cprintf (ent, PRINT_HIGH, "Homing missiles off\n");
+		ent->client->pers.homing_state = 0;
+		break;
+	case 1:
+	default:
+		gi.cprintf (ent, PRINT_HIGH, "Homing missiles on\n");
+		ent->client->pers.homing_state = 1;
+		break;
+	}
+}
+
+/*
+====================
+Cmd_Store_Teleport_f
+====================
+*/
+void
+Cmd_Store_Teleport_f (edict_t *ent)
+{
+	VectorCopy (ent->s.origin, ent->client->teleport_origin);
+	VectorCopy (ent->s.angles, ent->client->teleport_angles);
+
+	ent->client->teleport_stored = true;
+
+	gi.centerprintf (ent, "Teleport Location Stored!\n");
+}
+
+/*
+==================
+Cmd_Load_Teleport_f
+==================
+*/
+void
+Cmd_Load_Teleport_f (edict_t *ent)
+{
+	int i;
+	
+	if (ent->client->teleport_stored)
+	{
+		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Cells"))] < TELEPORT_AMMO)
+			gi.centerprintf (ent, "Not enough cells to teleport (need %d).\n", TELEPORT_AMMO);
+		else
+		{
+			if (ent->health < TELEPORT_HEALTH)
+				gi.centerprintf (ent, "You can't teleport.\nYou need %d health.\n", TELEPORT_HEALTH);
+			else
+			{
+				gi.WriteByte (svc_temp_entity);
+				gi.WriteByte (TE_BOSSTPORT);
+				gi.WritePosition (ent->s.origin);
+				gi.multicast (ent->s.origin, MULTICAST_PVS);
+
+				// unlink to make sure it can't possibly interfere with KillBox
+				gi.unlinkentity (ent);
+
+				VectorCopy (ent->client->teleport_origin, ent->s.origin);
+				VectorCopy (ent->client->teleport_origin, ent->s.old_origin);
+				ent->s.origin[2] += 10;
+
+				// clear the velocity and hold them in place briefly
+				VectorClear (ent->velocity);
+				ent->client->ps.pmove.pm_time = 160>>3;		// hold time
+				ent->client->ps.pmove.pm_flags |= PMF_TIME_TELEPORT;
+
+				// draw the teleport splash on the player
+				ent->s.event = EV_PLAYER_TELEPORT;
+
+				// set angles
+				for (i=0 ; i<3 ; i++)
+					ent->client->ps.pmove.delta_angles[i] = ANGLE2SHORT(ent->client->teleport_angles[i] - ent->client->resp.cmd_angles[i]);
+
+				VectorClear (ent->s.angles);
+				VectorClear (ent->client->ps.viewangles);
+				VectorClear (ent->client->v_angle);
+
+				// kill anything at the destination
+				KillBox (ent);
+
+				gi.linkentity (ent);
+
+				ent->client->pers.inventory[ITEM_INDEX(FindItem("Cells"))] -= TELEPORT_AMMO;
+			}
+		}
+	}
+	else
+	{
+		gi.centerprintf (ent, "You don't have a location stored\n");
+	}
+}
+
 void
 Cmd_Say_f(edict_t *ent, qboolean team, qboolean arg0)
 {
@@ -1228,6 +1333,27 @@ Cmd_PlayerList_f(edict_t *ent)
 	gi.cprintf(ent, PRINT_HIGH, "%s", text);
 }
 
+/*
+=================
+Cmd_DetPipes_f
+CCH: new function to detonate all detpipes within 5000 units
+=================
+*/
+void
+Cmd_DetPipes_f (edict_t *ent)
+{
+	edict_t	*blip = NULL;
+
+	while ((blip = findradius(blip, ent->s.origin, 5000)) != NULL)
+	{
+		if (!strcmp(blip->classname, "detpipe") && blip->owner == ent)
+		{
+			blip->think = Grenade_Explode;
+			blip->nextthink = level.time + .1;
+		}
+	}
+}
+
 void
 ClientCommand(edict_t *ent)
 {
@@ -1360,14 +1486,33 @@ ClientCommand(edict_t *ent)
 	{
 		Cmd_PutAway_f(ent);
 	}
+	else if (Q_stricmp(cmd, "homing") == 0)
+	{
+		Cmd_Homing_f(ent); //Homing missiles
+	}
 	else if (Q_stricmp(cmd, "wave") == 0)
 	{
 		Cmd_Wave_f(ent);
+	}
+	// CCH: new detpipes command
+	else if (Q_stricmp (cmd, "detpipes") == 0)
+	{
+		Cmd_DetPipes_f (ent);
 	}
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 	{
 		Cmd_PlayerList_f(ent);
 	}
+	/* Teleportation */
+	else if (Q_stricmp (cmd, "storeteleport") == 0)
+	{
+		Cmd_Store_Teleport_f (ent);
+	}
+	else if (Q_stricmp (cmd, "loadteleport") == 0)
+	{
+		Cmd_Load_Teleport_f (ent);
+	}
+	/* Teleportation */
 	else /* anything that doesn't match a command will be a chat */
 	{
 		Cmd_Say_f(ent, false, true);
