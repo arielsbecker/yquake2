@@ -83,6 +83,11 @@
 #define MELEE_DISTANCE 80
 #define BODY_QUEUE_SIZE 8
 
+/* Teleportation defines */
+
+#define TELEPORT_AMMO				10
+#define TELEPORT_HEALTH				30
+
 typedef enum
 {
 	DAMAGE_NO,
@@ -708,6 +713,7 @@ void fire_shotgun(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 		int kick, int hspread, int vspread, int count, int mod);
 void fire_blaster(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 		int speed, int effect, qboolean hyper);
+void Grenade_Explode (edict_t *ent);
 void fire_grenade(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
 		int speed, float timer, float damage_radius);
 void fire_grenade2(edict_t *self, vec3_t start, vec3_t aimdir, int damage,
@@ -827,6 +833,7 @@ typedef struct
 	int helpchanged;
 
 	qboolean spectator; /* client is a spectator */
+	qboolean homing_state; /* homing missiles */
 } client_persistant_t;
 
 /* client data that stays across deathmatch respawns */
@@ -921,7 +928,12 @@ struct gclient_s
 	int flood_whenhead; /* head pointer for when said */
 
 	float respawn_time; /* can respawn when time > this */
-
+	
+	/* Teleportation variables */
+	qboolean	teleport_stored;
+	vec3_t		teleport_angles;
+	vec3_t		teleport_origin;
+	/* Teleportation variables */
 	edict_t *chase_target; /* player we are chasing */
 	qboolean update_chase; /* need to update chase info? */
 };

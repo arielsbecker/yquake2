@@ -994,15 +994,15 @@ InitClientPersistant(gclient_t *client)
 	client->pers.weapon = item;
 
 	client->pers.health = 100;
-	client->pers.max_health = 100;
+	client->pers.max_health = 160;
 
-	client->pers.max_bullets = 200;
-	client->pers.max_shells = 100;
-	client->pers.max_rockets = 50;
-	client->pers.max_grenades = 50;
-	client->pers.max_cells = 200;
-	client->pers.max_slugs = 50;
-
+	client->pers.max_bullets = 400;
+	client->pers.max_shells = 300;
+	client->pers.max_rockets = 100;
+	client->pers.max_grenades = 100;
+	client->pers.max_cells = 500;
+	client->pers.max_slugs = 100;
+	client->pers.homing_state = 1; //Homing missiles are on by default.
 	client->pers.connected = true;
 }
 
