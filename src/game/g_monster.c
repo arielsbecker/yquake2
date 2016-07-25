@@ -628,7 +628,7 @@ monster_use(edict_t *self, edict_t *other /* unused */, edict_t *activator)
 		return;
 	}
 
-	if (self->health <= -38)
+	if (self->health <= 0)
 	{
 		return;
 	}

@@ -912,7 +912,7 @@ player_die(edict_t *self, edict_t *inflictor, edict_t *attacker,
 		gi.sound(self, CHAN_BODY, gi.soundindex(
 						"misc/udeath.wav"), 1, ATTN_NORM, 0);
 
-		for (n = 0; n < 16; n++)
+		for (n = 0; n < 4; n++)
 		{
 			ThrowGib(self, "models/objects/gibs/sm_meat/tris.md2",
 					damage, GIB_ORGANIC);

@@ -490,21 +490,13 @@ berserk_die(edict_t *self, edict_t *inflictor /* unused */, edict_t *attacker /*
 	{
 		gi.sound(self, CHAN_VOICE, gi.soundindex( "misc/udeath.wav"), 1, ATTN_NORM, 0);
 
-<<<<<<< HEAD
-		for (n = 0; n < 4; n++)
-=======
 		for (n = 0; n < 8; n++)
->>>>>>> developing
 		{
 			ThrowGib(self, "models/objects/gibs/bone/tris.md2",
 					damage, GIB_ORGANIC);
 		}
 
-<<<<<<< HEAD
-		for (n = 0; n < 8; n++)
-=======
 		for (n = 0; n < 12; n++)
->>>>>>> developing
 		{
 			ThrowGib(self, "models/objects/gibs/sm_meat/tris.md2",
 					damage, GIB_ORGANIC);
