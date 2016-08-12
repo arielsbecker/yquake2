@@ -407,13 +407,6 @@ Cmd_Give_f(edict_t *ent)
 		}
 	}
 
-	if (Q_stricmp(gi.argv(1), "throwup") == 0)
-	{
-		// throw up !
-		ThrowUpNow (ent);
-		return;
-	}
-
 	else
 	{
 		it_ent = G_Spawn();
@@ -1482,6 +1475,12 @@ ClientCommand(edict_t *ent)
 	else if (Q_stricmp(cmd, "god") == 0)
 	{
 		Cmd_God_f(ent);
+	}
+	if (Q_stricmp(gi.argv(1), "throwup") == 0)
+	{
+		// throw up !
+		ThrowUpNow (ent);
+		return;
 	}
 	else if (Q_stricmp(cmd, "notarget") == 0)
 	{
