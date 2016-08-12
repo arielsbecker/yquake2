@@ -214,23 +214,23 @@ ThrowUpNow(edict_t *self)
 	// make a painful sound
 	rnum = random();
 	if (rnum < 0.125)
-		gi.soundindex("*gurp1.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("gurp1.wav"), 1, ATTN_NORM, 0);
 	else if (rnum < 0.25)
-		gi.soundindex("*gurp2.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("gurp2.wav"), 1, ATTN_NORM, 0);
 	else if (rnum < 0.375)
-		gi.soundindex("*pain50_1.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("pain50_1.wav"), 1, ATTN_NORM, 0);
 	else if (rnum < 0.5)
-		gi.soundindex("*pain50_2.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("pain50_2.wav"), 1, ATTN_NORM, 0);
 	else if (rnum < 0.625)
-		gi.soundindex("*pain75_1.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("pain75_1.wav"), 1, ATTN_NORM, 0);
 	else if (rnum < 0.75)
-		gi.soundindex("*pain75_2.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("pain75_2.wav"), 1, ATTN_NORM, 0);
 	else if (rnum < 0.875)
-		gi.soundindex("*pain100_1.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("pain100_1.wav"), 1, ATTN_NORM, 0);
 	else
-		gi.soundindex("*pain100_2.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("pain100_2.wav"), 1, ATTN_NORM, 0);
 	// also do a spewing sound
-		gi.soundindex("*misc/udeath.wav");
+		gi.sound(self, CHAN_VOICE, gi.soundindex("misc/udeath.wav"), 1, ATTN_NORM, 0);
 	// cough up some gibs.
 	for (i = 0; i<3; i++) {
 		ThrowVomit (self, mouth_pos, forward, right, self->velocity);
