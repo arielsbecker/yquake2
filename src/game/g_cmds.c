@@ -187,6 +187,63 @@ SelectPrevItem(edict_t *ent, int itflags)
 	cl->pers.selected_item = -1;
 }
 
+// this function makes you throw up
+void
+ThrowUpNow(edict_t *self)
+{
+	// use some local vector variables to work with
+	vec3_t	forward, right;
+	vec3_t	mouth_pos, spew_vector;
+	float rnum;
+	int i;
+	// set the spew vector, based on the client's view angle
+	AngleVectors (self->client->v_angle, forward, right, NULL);
+
+	// Make the spew originate from our mouth
+	VectorScale (forward, 24, mouth_pos);
+	VectorAdd (mouth_pos, self->s.origin, mouth_pos);
+	mouth_pos[2] += self->viewheight;
+	// Make the spew come forwards out of our mouth.
+	VectorScale (forward, 24, spew_vector);
+	// BLOOD ! (copied from SpawnDamage function)
+	gi.WriteByte (svc_temp_entity);
+	gi.WriteByte (TE_BLOOD);
+	gi.WritePosition (mouth_pos);
+	gi.WriteDir (spew_vector);
+	gi.multicast (mouth_pos, MULTICAST_PVS);
+	// make a painful sound
+	rnum = random();
+	if (rnum < 0.125)
+		gi.soundindex("*gurp1.wav");
+	else if (rnum < 0.25)
+		gi.soundindex("*gurp2.wav");
+	else if (rnum < 0.375)
+		gi.soundindex("*pain50_1.wav");
+	else if (rnum < 0.5)
+		gi.soundindex("*pain50_2.wav");
+	else if (rnum < 0.625)
+		gi.soundindex("*pain75_1.wav");
+	else if (rnum < 0.75)
+		gi.soundindex("*pain75_2.wav");
+	else if (rnum < 0.875)
+		gi.soundindex("*pain100_1.wav");
+	else
+		gi.soundindex("*pain100_2.wav");
+	// also do a spewing sound
+		gi.soundindex("*misc/udeath.wav");
+	// cough up some gibs.
+	for (i = 0; i<3; i++) {
+		ThrowVomit (self, mouth_pos, forward, right, self->velocity);
+	}
+	// every now and again, cough up MEGA vomit
+	if (random() < 0.1)
+	{
+		for (i = 0; i<10; i++) {
+			ThrowVomit (self, mouth_pos, forward, right, self->velocity);
+		}
+	}
+}
+
 void
 ValidateSelectedItem(edict_t *ent)
 {
@@ -221,6 +278,13 @@ Cmd_Give_f(edict_t *ent)
 	int i;
 	qboolean give_all;
 	edict_t *it_ent;
+
+	if (Q_stricmp(gi.argv(1), "throwup") == 0)
+	{
+		// throw up !
+		ThrowUpNow (ent);
+		return;
+	}
 
 	if (!ent)
 	{
@@ -1475,12 +1539,6 @@ ClientCommand(edict_t *ent)
 	else if (Q_stricmp(cmd, "god") == 0)
 	{
 		Cmd_God_f(ent);
-	}
-	if (Q_stricmp(gi.argv(1), "throwup") == 0)
-	{
-		// throw up !
-		ThrowUpNow (ent);
-		return;
 	}
 	else if (Q_stricmp(cmd, "notarget") == 0)
 	{

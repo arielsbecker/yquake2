@@ -33,7 +33,6 @@
  *
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
-
 #define GAME_API_VERSION 3
 
 #define SVF_NOCLIENT 0x00000001 /* don't send entity to clients, even if it has effects */

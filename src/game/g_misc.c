@@ -25,6 +25,7 @@
  */
 
 #include "header/local.h"
+#include "header/throwup.h"
 
 int gibsthisframe;
 int lastgibframe;
