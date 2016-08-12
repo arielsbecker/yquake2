@@ -37,7 +37,7 @@
 
 #define MAX_SUSTAINS		32
 #define	PARTICLE_GRAVITY 40
-#define BLASTER_PARTICLE_COLOR 0xe0
+#define BLASTER_PARTICLE_COLOR 0xa2
 #define INSTANT_PARTICLE -10000.0
 
 #include <math.h>

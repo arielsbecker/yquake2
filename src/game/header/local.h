@@ -677,7 +677,7 @@ void swimmonster_start(edict_t *self);
 void flymonster_start(edict_t *self);
 void AttackFinished(edict_t *self, float time);
 void monster_death_use(edict_t *self);
-void M_CatagorizePosition(edict_t *ent);
+void M_CategorizePosition(edict_t *ent);
 qboolean M_CheckAttack(edict_t *self);
 void M_FlyCheck(edict_t *self);
 void M_CheckGround(edict_t *ent);
@@ -928,7 +928,7 @@ struct gclient_s
 	int flood_whenhead; /* head pointer for when said */
 
 	float respawn_time; /* can respawn when time > this */
-	
+
 	/* Teleportation variables */
 	qboolean	teleport_stored;
 	vec3_t		teleport_angles;

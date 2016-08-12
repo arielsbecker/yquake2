@@ -31,9 +31,9 @@
 #define FRAME_IDLE_FIRST (FRAME_FIRE_LAST + 1)
 #define FRAME_DEACTIVATE_FIRST (FRAME_IDLE_LAST + 1)
 
-#define GRENADE_TIMER 3.0
-#define GRENADE_MINSPEED 400
-#define GRENADE_MAXSPEED 800
+#define GRENADE_TIMER 5.0
+#define GRENADE_MINSPEED 800
+#define GRENADE_MAXSPEED 1400
 
 static qboolean is_quad;
 static byte is_silenced;
@@ -292,47 +292,7 @@ ChangeWeapon(edict_t *ent)
 void
 NoAmmoWeaponChange(edict_t *ent)
 {
-	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("slugs"))] &&
-		ent->client->pers.inventory[ITEM_INDEX(FindItem("railgun"))])
-	{
-		ent->client->newweapon = FindItem("railgun");
-		return;
-	}
-
-	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("cells"))] &&
-		ent->client->pers.inventory[ITEM_INDEX(FindItem("hyperblaster"))])
-	{
-		ent->client->newweapon = FindItem("hyperblaster");
-		return;
-	}
-
-	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("bullets"))] &&
-		ent->client->pers.inventory[ITEM_INDEX(FindItem("chaingun"))])
-	{
-		ent->client->newweapon = FindItem("chaingun");
-		return;
-	}
-
-	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("bullets"))] &&
-		ent->client->pers.inventory[ITEM_INDEX(FindItem("machinegun"))])
-	{
-		ent->client->newweapon = FindItem("machinegun");
-		return;
-	}
-
-	if ((ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))] > 1) &&
-		ent->client->pers.inventory[ITEM_INDEX(FindItem("super shotgun"))])
-	{
-		ent->client->newweapon = FindItem("super shotgun");
-		return;
-	}
-
-	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("shells"))] &&
-		ent->client->pers.inventory[ITEM_INDEX(FindItem("shotgun"))])
-	{
-		ent->client->newweapon = FindItem("shotgun");
-		return;
-	}
+	/* Modified so every time you have no ammo, switch to blaster. */
 
 	ent->client->newweapon = FindItem("blaster");
 }
@@ -638,7 +598,7 @@ weapon_grenade_fire(edict_t *ent, qboolean held)
 	vec3_t offset;
 	vec3_t forward, right;
 	vec3_t start;
-	int damage = 125;
+	int damage = 300;
 	float timer;
 	int speed;
 	float radius;
@@ -648,7 +608,7 @@ weapon_grenade_fire(edict_t *ent, qboolean held)
 		return;
 	}
 
-	radius = damage + 40;
+	radius = damage + 100;
 
 	if (is_quad)
 	{
@@ -840,7 +800,7 @@ weapon_grenadelauncher_fire(edict_t *ent)
 	vec3_t offset;
 	vec3_t forward, right;
 	vec3_t start;
-	int damage = 120;
+	int damage = 300;
 	float radius;
 
 	if (!ent)
@@ -848,7 +808,7 @@ weapon_grenadelauncher_fire(edict_t *ent)
 		return;
 	}
 
-	radius = damage + 40;
+	radius = damage + 100;
 
 	if (is_quad)
 	{
@@ -907,7 +867,7 @@ Weapon_RocketLauncher_Fire(edict_t *ent)
 		return;
 	}
 
-	damage = 100 + (int)(random() * 20.0);
+	damage = 250 + (int)(random() * 20.0);
 	radius_damage = 120;
 	damage_radius = 120;
 
@@ -1012,7 +972,7 @@ Weapon_Blaster_Fire (edict_t *ent)
 	if (deathmatch->value)
 		damage = 15;
 	else
-		damage = 10;
+		damage = 25;
 	Blaster_Fire (ent, vec3_origin, damage, false, EF_BLASTER);
 
 	// STEVE : add 2 new bolts below
@@ -1139,8 +1099,8 @@ Machinegun_Fire(edict_t *ent)
 	vec3_t start;
 	vec3_t forward, right;
 	vec3_t angles;
-	int damage = 8;
-	int kick = 2;
+	int damage = 20;
+	int kick = 4;
 	vec3_t offset;
 
 	if (!ent)
@@ -1264,7 +1224,7 @@ Chaingun_Fire(edict_t *ent)
 	float r, u;
 	vec3_t offset;
 	int damage;
-	int kick = 2;
+	int kick = 6;
 
 	if (!ent)
 	{
@@ -1277,7 +1237,7 @@ Chaingun_Fire(edict_t *ent)
 	}
 	else
 	{
-		damage = 8;
+		damage = 14;
 	}
 
 	if (ent->client->ps.gunframe == 5)
@@ -1431,8 +1391,8 @@ weapon_shotgun_fire(edict_t *ent)
 	vec3_t start;
 	vec3_t forward, right;
 	vec3_t offset;
-	int damage = 4;
-	int kick = 8;
+	int damage = 12;
+	int kick = 20;
 
 	if (!ent)
 	{
@@ -1509,8 +1469,8 @@ weapon_supershotgun_fire(edict_t *ent)
 	vec3_t forward, right;
 	vec3_t offset;
 	vec3_t v;
-	int damage = 6;
-	int kick = 12;
+	int damage = 40;
+	int kick = 25;
 
 	if (!ent)
 	{
@@ -1595,13 +1555,13 @@ weapon_railgun_fire(edict_t *ent)
 	if (deathmatch->value)
 	{
 		/* normal damage is too extreme in dm */
-		damage = 100;
-		kick = 200;
+		damage = 200;
+		kick = 600;
 	}
 	else
 	{
-		damage = 150;
-		kick = 250;
+		damage = 200;
+		kick = 600;
 	}
 
 	if (is_quad)
@@ -1668,11 +1628,11 @@ weapon_bfg_fire(edict_t *ent)
 
 	if (deathmatch->value)
 	{
-		damage = 200;
+		damage = 400;
 	}
 	else
 	{
-		damage = 500;
+		damage = 1000;
 	}
 
 	if (ent->client->ps.gunframe == 9)

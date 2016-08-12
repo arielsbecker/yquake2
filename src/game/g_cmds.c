@@ -26,6 +26,7 @@
 
 #include "header/local.h"
 #include "monster/misc/player.h"
+#include "header/throwup.h"
 
 static char *
 ClientTeam(edict_t *ent, char* value)
@@ -405,6 +406,7 @@ Cmd_Give_f(edict_t *ent)
 			ent->client->pers.inventory[index] += it->quantity;
 		}
 	}
+
 	else
 	{
 		it_ent = G_Spawn();
@@ -1060,6 +1062,7 @@ Cmd_Wave_f(edict_t *ent)
 	}
 }
 
+
 /*
 =================
 Cmd_Homing_f
@@ -1111,7 +1114,7 @@ void
 Cmd_Load_Teleport_f (edict_t *ent)
 {
 	int i;
-	
+
 	if (ent->client->teleport_stored)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Cells"))] < TELEPORT_AMMO)
@@ -1354,6 +1357,57 @@ Cmd_DetPipes_f (edict_t *ent)
 	}
 }
 
+/*
+=================
+Cmd_Push_f
+=================
+*/
+void
+Cmd_Push_f (edict_t *ent)
+{
+	vec3_t	start;
+	vec3_t	forward;
+	vec3_t	end;
+	trace_t	tr;
+
+	VectorCopy(ent->s.origin, start);
+	start[2] += ent->viewheight;
+	AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+	VectorMA(start, 8192, forward, end);
+	tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
+	if ( tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)) )
+	{
+		VectorScale(forward, 5000, forward);
+		VectorAdd(forward, tr.ent->velocity, tr.ent->velocity);
+	}
+}
+
+/*
+=================
+Cmd_Pull_f
+=================
+*/
+void
+Cmd_Pull_f (edict_t *ent)
+{
+	vec3_t	start;
+	vec3_t	forward;
+	vec3_t	end;
+	trace_t	tr;
+
+	VectorCopy(ent->s.origin, start);
+	start[2] += ent->viewheight;
+	AngleVectors(ent->client->v_angle, forward, NULL, NULL);
+	VectorMA(start, 8192, forward, end);
+	tr = gi.trace(start, NULL, NULL, end, ent, MASK_SHOT);
+	if ( tr.ent && ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client)) )
+	{
+		VectorScale(forward, -5000, forward);
+		VectorAdd(forward, tr.ent->velocity, tr.ent->velocity);
+	}
+}
+
+
 void
 ClientCommand(edict_t *ent)
 {
@@ -1422,6 +1476,12 @@ ClientCommand(edict_t *ent)
 	{
 		Cmd_God_f(ent);
 	}
+	if (Q_stricmp(gi.argv(1), "throwup") == 0)
+	{
+		// throw up !
+		ThrowUpNow (ent);
+		return;
+	}
 	else if (Q_stricmp(cmd, "notarget") == 0)
 	{
 		Cmd_Notarget_f(ent);
@@ -1489,6 +1549,14 @@ ClientCommand(edict_t *ent)
 	else if (Q_stricmp(cmd, "homing") == 0)
 	{
 		Cmd_Homing_f(ent); //Homing missiles
+	}
+	else if (Q_stricmp(cmd, "push") == 0)
+	{
+		Cmd_Push_f(ent); //Push enemies
+	}
+	else if (Q_stricmp(cmd, "pull") == 0)
+	{
+		Cmd_Pull_f(ent); //Pull enemies
 	}
 	else if (Q_stricmp(cmd, "wave") == 0)
 	{
