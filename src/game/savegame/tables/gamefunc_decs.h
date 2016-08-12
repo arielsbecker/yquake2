@@ -766,7 +766,7 @@ extern void M_MoveFrame ( edict_t * self ) ;
 extern void M_SetEffects ( edict_t * ent ) ;
 extern void M_droptofloor ( edict_t * ent ) ;
 extern void M_WorldEffects ( edict_t * ent ) ;
-extern void M_CatagorizePosition ( edict_t * ent ) ;
+extern void M_CategorizePosition ( edict_t * ent ) ;
 extern void M_CheckGround ( edict_t * ent ) ;
 extern void AttackFinished ( edict_t * self , float time ) ;
 extern void M_FlyCheck ( edict_t * self ) ;

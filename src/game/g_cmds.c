@@ -26,6 +26,7 @@
 
 #include "header/local.h"
 #include "monster/misc/player.h"
+#include "header/throwup.h"
 
 static char *
 ClientTeam(edict_t *ent, char* value)
@@ -405,6 +406,14 @@ Cmd_Give_f(edict_t *ent)
 			ent->client->pers.inventory[index] += it->quantity;
 		}
 	}
+
+	if (Q_stricmp(gi.argv(1), "throwup") == 0)
+	{
+		// throw up !
+		ThrowUpNow (ent);
+		return;
+	}
+
 	else
 	{
 		it_ent = G_Spawn();
@@ -1060,6 +1069,7 @@ Cmd_Wave_f(edict_t *ent)
 	}
 }
 
+
 /*
 =================
 Cmd_Homing_f
@@ -1111,7 +1121,7 @@ void
 Cmd_Load_Teleport_f (edict_t *ent)
 {
 	int i;
-	
+
 	if (ent->client->teleport_stored)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Cells"))] < TELEPORT_AMMO)

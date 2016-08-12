@@ -766,7 +766,7 @@
 {"M_SetEffects", (byte *)M_SetEffects},
 {"M_droptofloor", (byte *)M_droptofloor},
 {"M_WorldEffects", (byte *)M_WorldEffects},
-{"M_CatagorizePosition", (byte *)M_CatagorizePosition},
+{"M_CategorizePosition", (byte *)M_CategorizePosition},
 {"M_CheckGround", (byte *)M_CheckGround},
 {"AttackFinished", (byte *)AttackFinished},
 {"M_FlyCheck", (byte *)M_FlyCheck},

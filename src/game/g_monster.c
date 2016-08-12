@@ -259,7 +259,7 @@ M_CheckGround(edict_t *ent)
 
     /* This two lines were commented out
 	   by id. But why? */
-    ent->groundentity = trace.ent;
+	ent->groundentity = trace.ent;
 	ent->groundentity_linkcount = trace.ent->linkcount;
 
 	if (!trace.startsolid && !trace.allsolid)
@@ -272,7 +272,7 @@ M_CheckGround(edict_t *ent)
 }
 
 void
-M_CatagorizePosition(edict_t *ent)
+M_CategorizePosition(edict_t *ent)
 {
 	vec3_t point;
 	int cont;
@@ -470,7 +470,7 @@ M_droptofloor(edict_t *ent)
 
 	gi.linkentity(ent);
 	M_CheckGround(ent);
-	M_CatagorizePosition(ent);
+	M_CategorizePosition(ent);
 }
 
 void
@@ -606,7 +606,7 @@ monster_think(edict_t *self)
 		M_CheckGround(self);
 	}
 
-	M_CatagorizePosition(self);
+	M_CategorizePosition(self);
 	M_WorldEffects(self);
 	M_SetEffects(self);
 }
@@ -628,7 +628,7 @@ monster_use(edict_t *self, edict_t *other /* unused */, edict_t *activator)
 		return;
 	}
 
-	if (self->health <= 0)
+	if (self->health <= -500)
 	{
 		return;
 	}
